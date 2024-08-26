@@ -6,7 +6,7 @@ public class HumiditySensor : ISensor
 {
     public string GetMeasureUnit()
     {
-        return "hum";
+        return "g/kg";
     }
 
     public SensorType GetSensorType()

@@ -1,7 +1,7 @@
 using System.Text;
-using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Extensions;
+using Microsoft.AspNetCore.Authentication;
 using Newtonsoft.Json;
+using ConfigurationManager = System.Configuration.ConfigurationManager;
 
 namespace GreenhouseManagement.SensorManager.Models;
 
@@ -9,11 +9,27 @@ public class Manager
 {
     public List<ISensor> Sensors { get; set; }
     private readonly Guid _id;
+    private readonly string _baseUrl;
+    private readonly int _interval;
 
     public Manager()
     {
         this._id = Guid.NewGuid();
         this.Sensors = [];
+
+        var baseUrl = ConfigurationManager.AppSettings["Greenhouse:ServerBaseURL"];
+        if (baseUrl == null || baseUrl == "")
+        {
+            throw new Exception("No BaseUrl configured for the Greenhouse server");
+        }
+        this._baseUrl = baseUrl;
+
+        var parseResult = int.TryParse(ConfigurationManager.AppSettings["Greenhouse:SensorInterval"], out int interval);
+        if (!parseResult)
+        {
+            interval = 10000;
+        }
+        this._interval = interval;
     }
 
     public void AddSensor(ISensor sensor)
@@ -57,7 +73,13 @@ public class Manager
         string json = JsonConvert.SerializeObject(values);
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        await client.PostAsync($"http://localhost:5129/api/sensors?sensorId={this._id}", content);
+        var response = await client.PostAsync($"{this._baseUrl}/api/sensors?sensorId={this._id}", content);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            Console.WriteLine("Failed to send values to server");
+            return;
+        }
 
         Console.WriteLine($"Values {json} sent to server");
     }
