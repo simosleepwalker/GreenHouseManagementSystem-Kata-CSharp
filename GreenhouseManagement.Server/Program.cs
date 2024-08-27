@@ -10,6 +10,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<ISensorValueRepository, SensorValueRepository>();
+builder.Services.AddSingleton<ISensorManagerRepository, SensorManagerRepository>();
 
 var app = builder.Build();
 

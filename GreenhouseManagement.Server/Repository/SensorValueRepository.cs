@@ -1,6 +1,6 @@
-using GreenhouseManagement.Server.Models;
-
 namespace GreenhouseManagement.Server.Repository;
+
+using GreenhouseManagement.Server.Models;
 
 public class SensorValueRepository : ISensorValueRepository
 {

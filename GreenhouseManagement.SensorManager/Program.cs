@@ -1,4 +1,5 @@
 using GreenhouseManagement.SensorManager.Models;
+using ConfigurationManager = System.Configuration.ConfigurationManager;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +30,7 @@ sensorManager.AddSensor(new HumiditySensor());
 sensorManager.AddSensor(new LightSensor());
 sensorManager.AddSensor(new TemperatureSensor());
 
+await sensorManager.RegisterSensor();
 sensorManager.Start();
 
-app.Run();
+app.Run(ConfigurationManager.AppSettings["Greenhouse:SensorManagerBaseURL"]);
