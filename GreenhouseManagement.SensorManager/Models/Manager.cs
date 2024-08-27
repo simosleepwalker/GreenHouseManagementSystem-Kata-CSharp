@@ -1,5 +1,6 @@
 using System.Text;
-using Microsoft.AspNetCore.Authentication;
+using GreenhouseManagement.SensorManager.DTO;
+using Microsoft.AspNetCore.Server.HttpSys;
 using Newtonsoft.Json;
 using ConfigurationManager = System.Configuration.ConfigurationManager;
 
@@ -9,7 +10,8 @@ public class Manager
 {
     public List<ISensor> Sensors { get; set; }
     private readonly Guid _id;
-    private readonly string _baseUrl;
+    private readonly string _serverBaseUrl;
+    private readonly string _sensorManagerBaseUrl;
     private readonly int _interval;
 
     public Manager()
@@ -22,7 +24,7 @@ public class Manager
         {
             throw new Exception("No BaseUrl configured for the Greenhouse server");
         }
-        this._baseUrl = baseUrl;
+        this._serverBaseUrl = baseUrl;
 
         var parseResult = int.TryParse(ConfigurationManager.AppSettings["Greenhouse:SensorInterval"], out int interval);
         if (!parseResult)
@@ -30,6 +32,13 @@ public class Manager
             interval = 10000;
         }
         this._interval = interval;
+
+        var sensorManagerBaseUrl = ConfigurationManager.AppSettings["Greenhouse:SensorManagerBaseURL"];
+        if (sensorManagerBaseUrl == null || sensorManagerBaseUrl == "")
+        {
+            throw new Exception("No BaseUrl configured for the Greenhouse sensor manager");
+        }
+        this._sensorManagerBaseUrl = sensorManagerBaseUrl;
     }
 
     public void AddSensor(ISensor sensor)
@@ -59,6 +68,25 @@ public class Manager
         return sensorValues;
     }
 
+    public async Task RegisterSensor()
+    {
+        var client = new HttpClient();
+
+        var sensorManagerDTO = new SensorManagerDTO(this._id, this._sensorManagerBaseUrl);
+        string json = JsonConvert.SerializeObject(sensorManagerDTO);
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+        var response = await client.PostAsync($"{this._serverBaseUrl}/api/sensors", content);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new HttpRequestException("Couldn't register sensor manager to GreenHouse Server");
+        }
+
+        Console.WriteLine("Sensor manager registered to GreenHouse Server");
+
+    }
+
     public async Task SendValues()
     {
         var client = new HttpClient();
@@ -73,7 +101,7 @@ public class Manager
         string json = JsonConvert.SerializeObject(values);
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        var response = await client.PostAsync($"{this._baseUrl}/api/sensors?sensorId={this._id}", content);
+        var response = await client.PostAsync($"{this._serverBaseUrl}/api/sensors/data?sensorId={this._id}", content);
 
         if (!response.IsSuccessStatusCode)
         {
