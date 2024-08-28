@@ -20,4 +20,20 @@ public class SensorValueRepository : ISensorValueRepository
     {
         this._sensorValues.Add(sensorValue);
     }
+
+    public SensorValue? GetLatestSensorValue(Guid sensorId)
+    {
+        return this._sensorValues
+            .Where(x => x.SensorId == sensorId)
+            .OrderByDescending(x => x.Timestamp)
+            .FirstOrDefault();
+    }
+
+    public SensorValue? GetLatestSensorValueByType(Guid sensorId, SensorType sensorType)
+    {
+        return this._sensorValues
+            .Where(x => x.SensorId == sensorId && x.SensorType == sensorType)
+            .OrderByDescending(x => x.Timestamp)
+            .FirstOrDefault();
+    }
 }

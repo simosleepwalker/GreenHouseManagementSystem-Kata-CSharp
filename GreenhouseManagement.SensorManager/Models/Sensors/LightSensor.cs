@@ -1,4 +1,4 @@
-namespace GreenhouseManagement.SensorManager.Models;
+namespace GreenhouseManagement.SensorManager.Models.Sensors;
 
 public class LightSensor : ISensor
 {
@@ -15,6 +15,6 @@ public class LightSensor : ISensor
     public decimal ReadValue()
     {
         var rand = new Random();
-        return new decimal(rand.NextDouble());
+        return new decimal(rand.NextDouble() * 100);
     }
 }

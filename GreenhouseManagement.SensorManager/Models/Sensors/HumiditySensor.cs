@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 
-namespace GreenhouseManagement.SensorManager.Models;
+namespace GreenhouseManagement.SensorManager.Models.Sensors;
 
 public class HumiditySensor : ISensor
 {
@@ -17,7 +17,7 @@ public class HumiditySensor : ISensor
     public decimal ReadValue()
     {
         var rand = new Random();
-        return new decimal(rand.NextDouble());
+        return new decimal(rand.NextDouble() * 100);
     }
 }
 

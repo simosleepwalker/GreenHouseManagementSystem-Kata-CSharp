@@ -1,4 +1,4 @@
-namespace GreenhouseManagement.SensorManager.Models;
+namespace GreenhouseManagement.SensorManager.Models.Sensors;
 
 public interface ISensor
 {

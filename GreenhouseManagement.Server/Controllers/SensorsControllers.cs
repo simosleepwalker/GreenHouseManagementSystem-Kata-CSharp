@@ -1,6 +1,7 @@
 using GreenhouseManagement.Server.DTO;
 using GreenhouseManagement.Server.Models;
 using GreenhouseManagement.Server.Repository;
+using GreenhouseManagement.Server.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GreenhouseManagement.Server.Controllers;
@@ -58,6 +59,12 @@ public class SensorsController : ControllerBase
     {
         var sensorManager = new SensorManager(sensor.Id, sensor.Url);
         this._sensorManagerRepository.StoreSensor(sensorManager);
+
+        var sensorValueChecker = new SensorValueChecker(this._sensorValueRepository, sensorManager);
+        Task.Run(sensorValueChecker.Start);
+
+        Console.WriteLine($"Sensor manager {sensor.Id} registered");
+
         return Ok();
     }
 }

@@ -1,12 +1,11 @@
 using System.Text;
 using GreenhouseManagement.SensorManager.DTO;
-using Microsoft.AspNetCore.Server.HttpSys;
 using Newtonsoft.Json;
 using ConfigurationManager = System.Configuration.ConfigurationManager;
 
-namespace GreenhouseManagement.SensorManager.Models;
+namespace GreenhouseManagement.SensorManager.Models.Sensors;
 
-public class Manager
+public class SensorManager
 {
     public List<ISensor> Sensors { get; set; }
     private readonly Guid _id;
@@ -14,7 +13,7 @@ public class Manager
     private readonly string _sensorManagerBaseUrl;
     private readonly int _interval;
 
-    public Manager()
+    public SensorManager()
     {
         this._id = Guid.NewGuid();
         this.Sensors = [];
@@ -116,7 +115,7 @@ public class Manager
     {
         while (true)
         {
-            System.Threading.Thread.Sleep(1000);
+            System.Threading.Thread.Sleep(this._interval);
             await this.SendValues();
         }
     }

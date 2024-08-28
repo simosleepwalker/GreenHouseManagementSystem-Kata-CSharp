@@ -6,6 +6,7 @@ public class SensorValue
     public decimal Value { get; set; }
     public string MeasureUnit { get; set; }
     public SensorType SensorType { get; set; }
+    public DateTime Timestamp { get; set; }
 
     public SensorValue(Guid sensorId, decimal value, string measureUnit, SensorType sensorType)
     {
@@ -13,6 +14,7 @@ public class SensorValue
         this.Value = value;
         this.MeasureUnit = measureUnit;
         this.SensorType = sensorType;
+        this.Timestamp = DateTime.Now;
     }
 }
 
