@@ -2,7 +2,7 @@
 
 ## Overview
 
-This repository contains the source code for a Green House Management System Kata implemented in C#. The project aims to demonstrate my experience with C# and my ability to design and implement a system that can manage the environmental conditions of a greenhouse.
+This repository contains the source code for a Green House Management System Kata implemented in C#. The project aims to study and prove my experience with C# and my ability to design and implement a system that can manage the environmental conditions of a greenhouse.
 
 ## Description
 
