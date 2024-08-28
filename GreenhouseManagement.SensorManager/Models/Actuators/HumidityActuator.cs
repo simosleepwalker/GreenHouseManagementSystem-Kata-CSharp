@@ -4,11 +4,11 @@ public class HumidityActuator : IActuator
 {
     public void DecreaseValue()
     {
-        Console.WriteLine("Opening glass to decrease humidity");
+        Console.WriteLine("Turning on dehumidifier to decrease humidity");
     }
 
     public void IncreaseValue()
     {
-        Console.WriteLine("Closing glass to increase humidity");
+        Console.WriteLine("Watering plants to increase humidity");
     }
 }
